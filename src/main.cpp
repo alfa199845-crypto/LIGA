@@ -8,23 +8,17 @@ using namespace std;
 
 int main() {
 
-    // ================= CONFIG =================
-    ifstream file("data/config.txt");
+    ifstream fileConfig("data/config.txt");
 
-    if (!file.is_open()) {
+    if (!fileConfig.is_open()) {
         cout << "Error: no se pudo abrir config.txt\n";
         return 1;
     }
 
     string nombre;
-    int puntosVictoria = 0;
-    int puntosEmpate = 0;
-    int puntosDerrota = 0;
-    vector<string> equipos;
-
     string linea;
 
-    while (getline(file, linea)) {
+    while (getline(fileConfig, linea)) {
 
         if (linea == "" || linea[0] == '#') continue;
 
@@ -35,19 +29,14 @@ int main() {
         getline(ss, valor);
 
         if (clave == "nombre") nombre = valor;
-        else if (clave == "puntos_victoria") puntosVictoria = stoi(valor);
-        else if (clave == "puntos_empate") puntosEmpate = stoi(valor);
-        else if (clave == "puntos_derrota") puntosDerrota = stoi(valor);
-        else if (clave == "equipo") equipos.push_back(valor);
     }
 
-    file.close();
+    fileConfig.close();
 
-    // ======= MENU =====
     int opcion;
 
     do {
-        cout << "\n=== " << nombre << " ===\n"; 
+        cout << "\n=== " << nombre << " ===\n";
         cout << "1. Ver tabla\n";
         cout << "2. Registrar partido\n";
         cout << "3. Ver jornadas\n";
@@ -60,12 +49,54 @@ int main() {
         if (opcion == 1) {
             cout << "Aqui se mostrara la tabla\n";
         }
+
         else if (opcion == 2) {
-            cout << "Aqui se registrara un partido\n";
+
+            string fecha, local, visitante;
+            int golesLocal, golesVisitante;
+
+            cout << "Fecha (YYYY-MM-DD): ";
+            cin >> fecha;
+
+            cout << "Equipo local: ";
+            cin >> local;
+
+            cout << "Equipo visitante: ";
+            cin >> visitante;
+
+            if (local == visitante) {
+                cout << "Error: equipos iguales\n";
+                continue;
+            }
+
+            cout << "Goles local: ";
+            cin >> golesLocal;
+
+            cout << "Goles visitante: ";
+            cin >> golesVisitante;
+
+            ofstream file("data/partidos.txt", ios::app);
+
+            if (!file.is_open()) {
+                cout << "Error al abrir partidos.txt\n";
+                continue;
+            }
+
+            file << fecha << "|"
+                 << local << "|"
+                 << visitante << "|"
+                 << golesLocal << "|"
+                 << golesVisitante << "\n";
+
+            file.close();
+
+            cout << "Partido guardado correctamente\n";
         }
+
         else if (opcion == 3) {
             cout << "Aqui se veran las jornadas\n";
         }
+
         else if (opcion == 4) {
             cout << "Aqui se veran los partidos\n";
         }
