@@ -1,5 +1,5 @@
 # Configuracion de liga
-nombre=Liga Demo
+nombre=Liga mg
 puntos_victoria=3
 puntos_empate=1
 puntos_derrota=0
