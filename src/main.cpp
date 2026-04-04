@@ -59,8 +59,7 @@ int main() {
 
             cout << "Fecha (YYYY-MM-DD): ";
             cin >> fecha;
-
-            // 🔥 MOSTRAR EQUIPOS
+            
             cout << "Equipos disponibles:\n";
             for (int i = 0; i < equipos.size(); i++) {
                 cout << "- " << equipos[i] << endl;
