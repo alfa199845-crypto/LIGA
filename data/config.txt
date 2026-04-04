@@ -1,1 +1,12 @@
+# Configuracion de liga
+nombre=Liga Demo
+puntos_victoria=3
+puntos_empate=1
+puntos_derrota=0
 
+equipo=Barcelona
+equipo=RealMadrid
+equipo=Atletico
+equipo=Sevilla
+equipo=Valencia
+equipo=Villarreal
