@@ -3,6 +3,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <algorithm> 
 
 using namespace std;
 
@@ -17,6 +18,12 @@ struct Equipo {
     int DG = 0;
     int PTS = 0;
 };
+
+bool comparar(Equipo a, Equipo b) {
+    if (a.PTS != b.PTS)
+        return a.PTS > b.PTS;
+    return a.DG > b.DG;
+}
 
 int main() {
 
@@ -64,7 +71,6 @@ int main() {
 
             vector<Equipo> tabla;
 
-            // Crear equipos
             for (int i = 0; i < equipos.size(); i++) {
                 Equipo e;
                 e.nombre = equipos[i];
@@ -132,12 +138,12 @@ int main() {
 
             file.close();
 
-            // Diferencia de gol
             for (int i = 0; i < tabla.size(); i++) {
                 tabla[i].DG = tabla[i].GF - tabla[i].GC;
             }
 
-            // Mostrar tabla
+            sort(tabla.begin(), tabla.end(), comparar);
+
             cout << "\nTABLA DE POSICIONES:\n";
 
             for (int i = 0; i < tabla.size(); i++) {
