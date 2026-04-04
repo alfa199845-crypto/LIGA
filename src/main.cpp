@@ -6,6 +6,18 @@
 
 using namespace std;
 
+struct Equipo {
+    string nombre;
+    int PJ = 0;
+    int PG = 0;
+    int PE = 0;
+    int PP = 0;
+    int GF = 0;
+    int GC = 0;
+    int DG = 0;
+    int PTS = 0;
+};
+
 int main() {
 
     ifstream fileConfig("data/config.txt");
@@ -49,7 +61,96 @@ int main() {
         cin >> opcion;
 
         if (opcion == 1) {
-            cout << "Aqui se mostrara la tabla\n";
+
+            vector<Equipo> tabla;
+
+            // Crear equipos
+            for (int i = 0; i < equipos.size(); i++) {
+                Equipo e;
+                e.nombre = equipos[i];
+                tabla.push_back(e);
+            }
+
+            ifstream file("data/partidos.txt");
+
+            if (!file.is_open()) {
+                cout << "No se pudo abrir partidos.txt\n";
+                continue;
+            }
+
+            string linea;
+
+            while (getline(file, linea)) {
+
+                stringstream ss(linea);
+                string fecha, local, visitante, gL, gV;
+
+                getline(ss, fecha, '|');
+                getline(ss, local, '|');
+                getline(ss, visitante, '|');
+                getline(ss, gL, '|');
+                getline(ss, gV, '|');
+
+                int golesLocal = stoi(gL);
+                int golesVisitante = stoi(gV);
+
+                for (int i = 0; i < tabla.size(); i++) {
+
+                    if (tabla[i].nombre == local) {
+                        tabla[i].PJ++;
+                        tabla[i].GF += golesLocal;
+                        tabla[i].GC += golesVisitante;
+
+                        if (golesLocal > golesVisitante) {
+                            tabla[i].PG++;
+                            tabla[i].PTS += 3;
+                        } else if (golesLocal == golesVisitante) {
+                            tabla[i].PE++;
+                            tabla[i].PTS += 1;
+                        } else {
+                            tabla[i].PP++;
+                        }
+                    }
+
+                    if (tabla[i].nombre == visitante) {
+                        tabla[i].PJ++;
+                        tabla[i].GF += golesVisitante;
+                        tabla[i].GC += golesLocal;
+
+                        if (golesVisitante > golesLocal) {
+                            tabla[i].PG++;
+                            tabla[i].PTS += 3;
+                        } else if (golesVisitante == golesLocal) {
+                            tabla[i].PE++;
+                            tabla[i].PTS += 1;
+                        } else {
+                            tabla[i].PP++;
+                        }
+                    }
+                }
+            }
+
+            file.close();
+
+            // Diferencia de gol
+            for (int i = 0; i < tabla.size(); i++) {
+                tabla[i].DG = tabla[i].GF - tabla[i].GC;
+            }
+
+            // Mostrar tabla
+            cout << "\nTABLA DE POSICIONES:\n";
+
+            for (int i = 0; i < tabla.size(); i++) {
+                cout << tabla[i].nombre << " "
+                     << "PJ:" << tabla[i].PJ << " "
+                     << "PG:" << tabla[i].PG << " "
+                     << "PE:" << tabla[i].PE << " "
+                     << "PP:" << tabla[i].PP << " "
+                     << "GF:" << tabla[i].GF << " "
+                     << "GC:" << tabla[i].GC << " "
+                     << "DG:" << tabla[i].DG << " "
+                     << "PTS:" << tabla[i].PTS << endl;
+            }
         }
 
         else if (opcion == 2) {
@@ -59,7 +160,7 @@ int main() {
 
             cout << "Fecha (YYYY-MM-DD): ";
             cin >> fecha;
-            
+
             cout << "Equipos disponibles:\n";
             for (int i = 0; i < equipos.size(); i++) {
                 cout << "- " << equipos[i] << endl;
@@ -75,12 +176,8 @@ int main() {
             bool existeVisitante = false;
 
             for (int i = 0; i < equipos.size(); i++) {
-                if (equipos[i] == local) {
-                    existeLocal = true;
-                }
-                if (equipos[i] == visitante) {
-                    existeVisitante = true;
-                }
+                if (equipos[i] == local) existeLocal = true;
+                if (equipos[i] == visitante) existeVisitante = true;
             }
 
             if (!existeLocal || !existeVisitante) {
@@ -122,7 +219,7 @@ int main() {
         }
 
         else if (opcion == 4) {
-            
+
             ifstream file("data/partidos.txt");
 
             if (!file.is_open()) {
