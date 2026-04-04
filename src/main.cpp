@@ -122,7 +122,23 @@ int main() {
         }
 
         else if (opcion == 4) {
-            cout << "Aqui se veran los partidos\n";
+            
+            ifstream file("data/partidos.txt");
+
+            if (!file.is_open()) {
+                cout << "No se pudo abrir partidos.txt\n";
+                continue;
+            }
+
+            string linea;
+
+            cout << "\nPARTIDOS REGISTRADOS:\n";
+
+            while (getline(file, linea)) {
+                cout << linea << endl;
+            }
+
+            file.close();
         }
 
     } while (opcion != 5);
