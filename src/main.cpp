@@ -16,6 +16,7 @@ int main() {
     }
 
     string nombre;
+    vector<string> equipos;
     string linea;
 
     while (getline(fileConfig, linea)) {
@@ -29,6 +30,7 @@ int main() {
         getline(ss, valor);
 
         if (clave == "nombre") nombre = valor;
+        else if (clave == "equipo") equipos.push_back(valor);
     }
 
     fileConfig.close();
@@ -58,11 +60,34 @@ int main() {
             cout << "Fecha (YYYY-MM-DD): ";
             cin >> fecha;
 
+            // 🔥 MOSTRAR EQUIPOS
+            cout << "Equipos disponibles:\n";
+            for (int i = 0; i < equipos.size(); i++) {
+                cout << "- " << equipos[i] << endl;
+            }
+
             cout << "Equipo local: ";
             cin >> local;
 
             cout << "Equipo visitante: ";
             cin >> visitante;
+
+            bool existeLocal = false;
+            bool existeVisitante = false;
+
+            for (int i = 0; i < equipos.size(); i++) {
+                if (equipos[i] == local) {
+                    existeLocal = true;
+                }
+                if (equipos[i] == visitante) {
+                    existeVisitante = true;
+                }
+            }
+
+            if (!existeLocal || !existeVisitante) {
+                cout << "Error: equipo no existe en la liga\n";
+                continue;
+            }
 
             if (local == visitante) {
                 cout << "Error: equipos iguales\n";
