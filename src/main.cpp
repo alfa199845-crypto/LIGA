@@ -53,6 +53,7 @@ int main() {
     }
 
     fileConfig.close();
+
     int opcion;
 
     do {
@@ -65,7 +66,7 @@ int main() {
         cout << "Opcion: ";
 
         cin >> opcion;
-        
+
         if (opcion == 1) {
 
             vector<Equipo> tabla;
@@ -136,7 +137,7 @@ int main() {
             }
 
             file.close();
-            
+
             for (int i = 0; i < tabla.size(); i++) {
                 tabla[i].DG = tabla[i].GF - tabla[i].GC;
             }
@@ -174,7 +175,7 @@ int main() {
                 fileTabla.close();
             }
         }
-            
+
         else if (opcion == 2) {
 
             string fecha, local, visitante;
@@ -233,11 +234,34 @@ int main() {
 
             file.close();
 
+            ofstream fileFecha("data/fechas.txt", ios::app);
+
+            if (fileFecha.is_open()) {
+                fileFecha << fecha << "\n";
+                fileFecha.close();
+            }
+
             cout << "Partido guardado correctamente\n";
         }
 
         else if (opcion == 3) {
-            cout << "Aqui se veran las jornadas\n";
+
+            ifstream file("data/fechas.txt");
+
+            if (!file.is_open()) {
+                cout << "No se pudo abrir fechas.txt\n";
+                continue;
+            }
+
+            string linea;
+
+            cout << "\nJORNADAS:\n";
+
+            while (getline(file, linea)) {
+                cout << linea << endl;
+            }
+
+            file.close();
         }
 
         else if (opcion == 4) {
