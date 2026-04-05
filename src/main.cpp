@@ -3,7 +3,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
-#include <algorithm> 
+#include <algorithm>
 
 using namespace std;
 
@@ -53,7 +53,6 @@ int main() {
     }
 
     fileConfig.close();
-
     int opcion;
 
     do {
@@ -66,7 +65,7 @@ int main() {
         cout << "Opcion: ";
 
         cin >> opcion;
-
+        
         if (opcion == 1) {
 
             vector<Equipo> tabla;
@@ -137,7 +136,7 @@ int main() {
             }
 
             file.close();
-
+            
             for (int i = 0; i < tabla.size(); i++) {
                 tabla[i].DG = tabla[i].GF - tabla[i].GC;
             }
@@ -146,19 +145,36 @@ int main() {
 
             cout << "\nTABLA DE POSICIONES:\n";
 
+            ofstream fileTabla("data/tabla.txt");
+
+            if (!fileTabla.is_open()) {
+                cout << "No se pudo guardar tabla.txt\n";
+            }
+
             for (int i = 0; i < tabla.size(); i++) {
-                cout << tabla[i].nombre << " "
-                     << "PJ:" << tabla[i].PJ << " "
-                     << "PG:" << tabla[i].PG << " "
-                     << "PE:" << tabla[i].PE << " "
-                     << "PP:" << tabla[i].PP << " "
-                     << "GF:" << tabla[i].GF << " "
-                     << "GC:" << tabla[i].GC << " "
-                     << "DG:" << tabla[i].DG << " "
-                     << "PTS:" << tabla[i].PTS << endl;
+
+                string linea = tabla[i].nombre + " " +
+                               "PJ:" + to_string(tabla[i].PJ) + " " +
+                               "PG:" + to_string(tabla[i].PG) + " " +
+                               "PE:" + to_string(tabla[i].PE) + " " +
+                               "PP:" + to_string(tabla[i].PP) + " " +
+                               "GF:" + to_string(tabla[i].GF) + " " +
+                               "GC:" + to_string(tabla[i].GC) + " " +
+                               "DG:" + to_string(tabla[i].DG) + " " +
+                               "PTS:" + to_string(tabla[i].PTS);
+
+                cout << linea << endl;
+
+                if (fileTabla.is_open()) {
+                    fileTabla << linea << endl;
+                }
+            }
+
+            if (fileTabla.is_open()) {
+                fileTabla.close();
             }
         }
-
+            
         else if (opcion == 2) {
 
             string fecha, local, visitante;
