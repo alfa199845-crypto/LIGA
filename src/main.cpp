@@ -67,6 +67,7 @@ int main() {
         cout << "3. Ver jornadas\n";
         cout << "4. Ver partidos\n";
         cout << "5. Salir\n";
+        cout << "6. Historial entre equipos\n";
         cout << "Opcion: ";
 
         cin >> opcion;
@@ -328,7 +329,53 @@ if (duplicado) {
 
             file.close();
         }
+else if (opcion == 6) {
 
+    string eq1, eq2;
+
+    cout << "Equipo 1: ";
+    cin >> eq1;
+
+    cout << "Equipo 2: ";
+    cin >> eq2;
+
+    ifstream file("data/partidos.txt");
+
+    if (!file.is_open()) {
+        cout << "No se pudo abrir partidos.txt\n";
+        continue;
+    }
+
+    string linea;
+    bool encontrado = false;
+
+    cout << "\nHISTORIAL DE ENFRENTAMIENTOS:\n";
+
+    while (getline(file, linea)) {
+
+        stringstream ss(linea);
+        string fecha, local, visitante, gL, gV;
+
+        getline(ss, fecha, '|');
+        getline(ss, local, '|');
+        getline(ss, visitante, '|');
+        getline(ss, gL, '|');
+        getline(ss, gV, '|');
+
+        if ((local == eq1 && visitante == eq2) ||
+            (local == eq2 && visitante == eq1)) {
+
+            cout << linea << endl;
+            encontrado = true;
+        }
+    }
+
+    if (!encontrado) {
+        cout << "No hay enfrentamientos\n";
+    }
+
+    file.close();
+}
     } while (opcion != 5);
 
     cout << "Saliendo del programa...\n";
