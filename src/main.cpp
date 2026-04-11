@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <cstdio>
 
 using namespace std;
 
@@ -68,6 +69,7 @@ int main() {
         cout << "4. Ver partidos\n";
         cout << "5. Salir\n";
         cout << "6. Historial entre equipos\n";
+        cout << "7. Editar partido\n";
         cout << "Opcion: ";
 
         cin >> opcion;
@@ -376,6 +378,69 @@ else if (opcion == 6) {
 
     file.close();
 }
+else if (opcion == 7) {
+
+    string fechaBuscar;
+    cout << "Fecha del partido a editar: ";
+    cin >> fechaBuscar;
+
+    ifstream file("data/partidos.txt");
+    ofstream temp("data/temp.txt");
+
+    if (!file.is_open()) {
+        cout << "No se pudo abrir partidos.txt\n";
+        continue;
+    }
+
+    string linea;
+    bool encontrado = false;
+
+    while (getline(file, linea)) {
+
+        stringstream ss(linea);
+        string fecha, local, visitante, gL, gV;
+
+        getline(ss, fecha, '|');
+        getline(ss, local, '|');
+        getline(ss, visitante, '|');
+        getline(ss, gL, '|');
+        getline(ss, gV, '|');
+
+        if (fecha == fechaBuscar) {
+
+            int nuevoL, nuevoV;
+
+            cout << "Editando: " << local << " vs " << visitante << endl;
+
+            cout << "Nuevo goles local: ";
+            cin >> nuevoL;
+
+            cout << "Nuevo goles visitante: ";
+            cin >> nuevoV;
+
+            temp << fecha << "|" << local << "|" << visitante << "|"
+                 << nuevoL << "|" << nuevoV << "\n";
+
+            encontrado = true;
+
+        } else {
+            temp << linea << "\n";
+        }
+    }
+
+    file.close();
+    temp.close();
+
+    if (!encontrado) {
+        cout << "No se encontro partido con esa fecha\n";
+    }
+
+    remove("data/partidos.txt");
+    rename("data/temp.txt", "data/partidos.txt");
+
+    cout << "Partido actualizado correctamente\n";
+}
+        
     } while (opcion != 5);
 
     cout << "Saliendo del programa...\n";
