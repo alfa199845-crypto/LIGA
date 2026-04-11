@@ -234,7 +234,36 @@ int main() {
 
             cout << "Goles visitante: ";
             cin >> golesVisitante;
+            ifstream fileCheck("data/partidos.txt");
 
+            string lineaCheck;
+            bool duplicado = false;
+
+            while (getline(fileCheck, lineaCheck)) {
+
+            stringstream ss(lineaCheck);
+            string f, l, v;
+
+            getline(ss, f, '|');
+            getline(ss, l, '|');
+            getline(ss, v, '|');
+
+            if (f == fecha &&
+            ((l == local && v == visitante) ||
+            (l == visitante && v == local))) {
+
+        duplicado = true;
+        break;
+    }
+}
+
+fileCheck.close();
+
+if (duplicado) {
+    cout << "Error: partido duplicado en la misma fecha\n";
+    continue;
+}
+            
             ofstream file("data/partidos.txt", ios::app);
 
             if (!file.is_open()) {
