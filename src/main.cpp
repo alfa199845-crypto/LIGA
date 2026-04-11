@@ -22,7 +22,11 @@ struct Equipo {
 bool comparar(Equipo a, Equipo b) {
     if (a.PTS != b.PTS)
         return a.PTS > b.PTS;
-    return a.DG > b.DG;
+
+    if (a.DG != b.DG)
+        return a.DG > b.DG;
+
+    return a.GF > b.GF;
 }
 
 int main() {
