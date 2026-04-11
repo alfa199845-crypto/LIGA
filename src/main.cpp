@@ -75,6 +75,7 @@ int main() {
         cin >> opcion;
         cin.ignore();
 
+        // ================= TABLA =================
         if (opcion == 1) {
 
             vector<Equipo> tabla;
@@ -194,6 +195,7 @@ int main() {
             }
         }
 
+        // ================= REGISTRAR =================
         else if (opcion == 2) {
 
             string fecha, local, visitante;
@@ -237,6 +239,7 @@ int main() {
 
             cout << "Goles visitante: ";
             cin >> golesVisitante;
+
             ifstream fileCheck("data/partidos.txt");
 
             string lineaCheck;
@@ -244,29 +247,29 @@ int main() {
 
             while (getline(fileCheck, lineaCheck)) {
 
-            stringstream ss(lineaCheck);
-            string f, l, v;
+                stringstream ss(lineaCheck);
+                string f, l, v;
 
-            getline(ss, f, '|');
-            getline(ss, l, '|');
-            getline(ss, v, '|');
+                getline(ss, f, '|');
+                getline(ss, l, '|');
+                getline(ss, v, '|');
 
-            if (f == fecha &&
-            ((l == local && v == visitante) ||
-            (l == visitante && v == local))) {
+                if (f == fecha &&
+                    ((l == local && v == visitante) ||
+                     (l == visitante && v == local))) {
 
-        duplicado = true;
-        break;
-    }
-}
+                    duplicado = true;
+                    break;
+                }
+            }
 
-fileCheck.close();
+            fileCheck.close();
 
-if (duplicado) {
-    cout << "Error: partido duplicado en la misma fecha\n";
-    continue;
-}
-            
+            if (duplicado) {
+                cout << "Error: partido duplicado en la misma fecha\n";
+                continue;
+            }
+
             ofstream file("data/partidos.txt", ios::app);
 
             if (!file.is_open()) {
@@ -292,8 +295,8 @@ if (duplicado) {
             cout << "Partido guardado correctamente\n";
         }
 
+        // ================= RESTO =================
         else if (opcion == 3) {
-
             ifstream file("data/fechas.txt");
 
             if (!file.is_open()) {
@@ -302,7 +305,6 @@ if (duplicado) {
             }
 
             string linea;
-
             cout << "\nJORNADAS:\n";
 
             while (getline(file, linea)) {
@@ -313,6 +315,31 @@ if (duplicado) {
         }
 
         else if (opcion == 4) {
+            ifstream file("data/partidos.txt");
+
+            if (!file.is_open()) {
+                cout << "No se pudo abrir partidos.txt\n";
+                continue;
+            }
+
+            string linea;
+            cout << "\nPARTIDOS REGISTRADOS:\n";
+
+            while (getline(file, linea)) {
+                cout << linea << endl;
+            }
+
+            file.close();
+        }
+
+        else if (opcion == 6) {
+            string eq1, eq2;
+
+            cout << "Equipo 1: ";
+            cin >> eq1;
+
+            cout << "Equipo 2: ";
+            cin >> eq2;
 
             ifstream file("data/partidos.txt");
 
@@ -322,125 +349,99 @@ if (duplicado) {
             }
 
             string linea;
+            bool encontrado = false;
 
-            cout << "\nPARTIDOS REGISTRADOS:\n";
+            cout << "\nHISTORIAL DE ENFRENTAMIENTOS:\n";
 
             while (getline(file, linea)) {
-                cout << linea << endl;
+
+                stringstream ss(linea);
+                string fecha, local, visitante, gL, gV;
+
+                getline(ss, fecha, '|');
+                getline(ss, local, '|');
+                getline(ss, visitante, '|');
+                getline(ss, gL, '|');
+                getline(ss, gV, '|');
+
+                if ((local == eq1 && visitante == eq2) ||
+                    (local == eq2 && visitante == eq1)) {
+
+                    cout << linea << endl;
+                    encontrado = true;
+                }
+            }
+
+            if (!encontrado) {
+                cout << "No hay enfrentamientos\n";
             }
 
             file.close();
         }
-else if (opcion == 6) {
 
-    string eq1, eq2;
+        else if (opcion == 7) {
+            string fechaBuscar;
 
-    cout << "Equipo 1: ";
-    cin >> eq1;
+            cout << "Fecha del partido a editar: ";
+            cin >> fechaBuscar;
 
-    cout << "Equipo 2: ";
-    cin >> eq2;
+            ifstream file("data/partidos.txt");
+            ofstream temp("data/temp.txt");
 
-    ifstream file("data/partidos.txt");
+            if (!file.is_open()) {
+                cout << "No se pudo abrir partidos.txt\n";
+                continue;
+            }
 
-    if (!file.is_open()) {
-        cout << "No se pudo abrir partidos.txt\n";
-        continue;
-    }
+            string linea;
+            bool encontrado = false;
 
-    string linea;
-    bool encontrado = false;
+            while (getline(file, linea)) {
 
-    cout << "\nHISTORIAL DE ENFRENTAMIENTOS:\n";
+                stringstream ss(linea);
+                string fecha, local, visitante, gL, gV;
 
-    while (getline(file, linea)) {
+                getline(ss, fecha, '|');
+                getline(ss, local, '|');
+                getline(ss, visitante, '|');
+                getline(ss, gL, '|');
+                getline(ss, gV, '|');
 
-        stringstream ss(linea);
-        string fecha, local, visitante, gL, gV;
+                if (fecha == fechaBuscar) {
 
-        getline(ss, fecha, '|');
-        getline(ss, local, '|');
-        getline(ss, visitante, '|');
-        getline(ss, gL, '|');
-        getline(ss, gV, '|');
+                    int nuevoL, nuevoV;
 
-        if ((local == eq1 && visitante == eq2) ||
-            (local == eq2 && visitante == eq1)) {
+                    cout << "Editando: " << local << " vs " << visitante << endl;
 
-            cout << linea << endl;
-            encontrado = true;
+                    cout << "Nuevo goles local: ";
+                    cin >> nuevoL;
+
+                    cout << "Nuevo goles visitante: ";
+                    cin >> nuevoV;
+
+                    temp << fecha << "|" << local << "|" << visitante << "|"
+                         << nuevoL << "|" << nuevoV << "\n";
+
+                    encontrado = true;
+
+                } else {
+                    temp << linea << "\n";
+                }
+            }
+
+            file.close();
+            temp.close();
+
+            if (!encontrado) {
+                cout << "No se encontro partido con esa fecha\n";
+            }
+
+            remove("data/partidos.txt");
+            rename("data/temp.txt", "data/partidos.txt");
+
+            cout << "Partido actualizado correctamente\n";
         }
-    }
 
-    if (!encontrado) {
-        cout << "No hay enfrentamientos\n";
-    }
-
-    file.close();
-}
-else if (opcion == 7) {
-
-    string fechaBuscar;
-    cout << "Fecha del partido a editar: ";
-    cin >> fechaBuscar;
-
-    ifstream file("data/partidos.txt");
-    ofstream temp("data/temp.txt");
-
-    if (!file.is_open()) {
-        cout << "No se pudo abrir partidos.txt\n";
-        continue;
-    }
-
-    string linea;
-    bool encontrado = false;
-
-    while (getline(file, linea)) {
-
-        stringstream ss(linea);
-        string fecha, local, visitante, gL, gV;
-
-        getline(ss, fecha, '|');
-        getline(ss, local, '|');
-        getline(ss, visitante, '|');
-        getline(ss, gL, '|');
-        getline(ss, gV, '|');
-
-        if (fecha == fechaBuscar) {
-
-            int nuevoL, nuevoV;
-
-            cout << "Editando: " << local << " vs " << visitante << endl;
-
-            cout << "Nuevo goles local: ";
-            cin >> nuevoL;
-
-            cout << "Nuevo goles visitante: ";
-            cin >> nuevoV;
-
-            temp << fecha << "|" << local << "|" << visitante << "|"
-                 << nuevoL << "|" << nuevoV << "\n";
-
-            encontrado = true;
-
-        } else {
-            temp << linea << "\n";
-        }
-    }
-
-    file.close();
-    temp.close();
-
-    if (!encontrado) {
-        cout << "No se encontro partido con esa fecha\n";
-    }
-
-    remove("data/partidos.txt");
-    rename("data/temp.txt", "data/partidos.txt");
-
-    cout << "Partido actualizado correctamente\n";
-}
-        
     } while (opcion != 5);
 
     cout << "Saliendo del programa...\n";
