@@ -66,6 +66,7 @@ int main() {
         cout << "Opcion: ";
 
         cin >> opcion;
+        cin.ignore();
 
         if (opcion == 1) {
 
@@ -146,10 +147,12 @@ int main() {
 
             cout << "\nTABLA DE POSICIONES:\n";
 
-            ofstream fileTabla("data/tabla.txt");
+            ofstream fileTabla("data/tabla.csv");
 
             if (!fileTabla.is_open()) {
-                cout << "No se pudo guardar tabla.txt\n";
+                cout << "No se pudo guardar tabla.csv\n";
+            } else {
+                fileTabla << "Equipo;PJ;PG;PE;PP;GF;GC;DG;PTS\n";
             }
 
             for (int i = 0; i < tabla.size(); i++) {
@@ -167,7 +170,15 @@ int main() {
                 cout << linea << endl;
 
                 if (fileTabla.is_open()) {
-                    fileTabla << linea << endl;
+                    fileTabla << tabla[i].nombre << ";"
+                              << tabla[i].PJ << ";"
+                              << tabla[i].PG << ";"
+                              << tabla[i].PE << ";"
+                              << tabla[i].PP << ";"
+                              << tabla[i].GF << ";"
+                              << tabla[i].GC << ";"
+                              << tabla[i].DG << ";"
+                              << tabla[i].PTS << "\n";
                 }
             }
 
@@ -183,6 +194,7 @@ int main() {
 
             cout << "Fecha (YYYY-MM-DD): ";
             cin >> fecha;
+            cin.ignore();
 
             cout << "Equipos disponibles:\n";
             for (int i = 0; i < equipos.size(); i++) {
@@ -190,10 +202,10 @@ int main() {
             }
 
             cout << "Equipo local: ";
-            cin >> local;
+            getline(cin, local);
 
             cout << "Equipo visitante: ";
-            cin >> visitante;
+            getline(cin, visitante);
 
             bool existeLocal = false;
             bool existeVisitante = false;
